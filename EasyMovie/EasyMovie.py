@@ -2,19 +2,20 @@ import os
 import time
 
 import find_torrent
-import gmail
-import setup
+from gmail import Gmail
+import settings
 
 if os.path.isfile("settings.data"):
-    downloaded_movies_location, users, sleep_time, email_address = setup.load_settings()
+    downloaded_movies_location, users, sleep_time, email_address = settings.load_settings()
 else:
-    downloaded_movies_location, users, sleep_time, email_address = setup.initial_setup()
+    downloaded_movies_location, users, sleep_time, email_address = settings.initial_setup()
 
 print_length = 50
 old_downloaded = os.listdir(downloaded_movies_location)
 
-gmail.login_imap(email_address)
-gmail.login_yagmail(email_address)
+gmail = Gmail(email_address)
+gmail.login_imap()
+gmail.login_yagmail()
 
 while True:
     print("Checking for emails" + " "*(print_length-(len("Checking for emails"))), end="\r")
