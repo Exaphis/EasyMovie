@@ -9,7 +9,8 @@ def load_settings():
     downloaded_movies_location = pickle.load(settings)
     users = pickle.load(settings)
     sleep_time = pickle.load(settings)
-    return downloaded_movies_location, users, sleep_time
+    email_address = pickle.load(settings)
+    return downloaded_movies_location, users, sleep_time, email_address
 
 
 def initial_setup():
@@ -27,6 +28,7 @@ def initial_setup():
     pickle.dump(sleep_time, settings)
 
     email_address = input("Enter gmail address to check for emails: ")
+    pickle.dump(email_address, settings)
     keyring.set_password("EasyMovie", email_address, getpass.getpass())
 
     return downloaded_movies_location, users, sleep_time, email_address
