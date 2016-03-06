@@ -13,7 +13,7 @@ def load_settings():
 
 
 def initial_setup():
-    settings = open("settings.data", "w")
+    settings = open("settings.data", "wb")
 
     downloaded_movies_location = input("Filepath to completed movie download location: ")
     pickle.dump(downloaded_movies_location, settings)
