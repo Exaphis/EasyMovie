@@ -24,7 +24,7 @@ def initial_setup():
         users.append(input("Enter an email address:"))
     pickle.dump(users, settings)
 
-    sleep_time = input("Sleep time after every run: ")
+    sleep_time = float(input("Sleep time after every run: "))
     pickle.dump(sleep_time, settings)
 
     email_address = input("Enter gmail address to check for emails: ")
