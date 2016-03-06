@@ -2,11 +2,11 @@ A small Python 3 script I made to download movies from KickassTorrents easily. C
 
 ## Installation
 
-Download the EasyMovie folder, and run EasyMovie.py with Python 3.
+Download the EasyMovie folder.
 
 ## Usage
 
-
+Run EasyMovie.py, and go through the initial setup. The settings will be saved throughout runs. Send an email from a specified user to your specified gmail account with the requested movie name in the subject line, and an email will be sent back to all of the users with the downloaded movie name and the transmission-remote output.
 
 ## Contributing
 
@@ -16,8 +16,6 @@ Download the EasyMovie folder, and run EasyMovie.py with Python 3.
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request
 
-## History
-
-TODO: Write history
-
 ##To Do
+
+Add automatic subtitle downloading
