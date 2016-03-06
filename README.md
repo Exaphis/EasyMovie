@@ -18,6 +18,6 @@ Run EasyMovie.py, and go through the initial setup. The settings will be saved t
 
 ##To Do
 
-* [ ]Add automatic subtitle downloading
-* [ ]Be able to change settings
-* [ ]Add GUI
+* Add automatic subtitle downloading
+* Be able to change settings
+* Add GUI
