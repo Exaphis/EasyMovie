@@ -5,7 +5,7 @@ import keyring
 
 
 def load_settings():
-    settings = open("settings.data", "r")
+    settings = open("settings.data", "rb")
     downloaded_movies_location = pickle.load(settings)
     users = pickle.load(settings)
     sleep_time = pickle.load(settings)
@@ -13,7 +13,7 @@ def load_settings():
 
 
 def initial_setup():
-    settings = open("settings.data", "w")
+    settings = open("settings.data", "wb")
 
     downloaded_movies_location = input("Filepath to completed movie download location: ")
     pickle.dump(downloaded_movies_location, settings)
