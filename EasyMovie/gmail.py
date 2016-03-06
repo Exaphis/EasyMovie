@@ -1,16 +1,22 @@
-import imaplib, smtplib, yagmail, os, email
+import email
+import imaplib
+import smtplib
+
+import keyring
+import yagmail
 
 
-def __init__(self):
+def __init__(self, email_address):
+    self.email_address = email_address
     self.imap = imaplib.IMAP4_SSL("imap.gmail.com")
 
 
 def login_imap(self):
-    self.imap.login("addtowunasmovies@gmail.com","")
+    self.imap.login(self.email_address, keyring.get_password("EasyMovie", self.email_address))
 
 
 def login_yagmail(self):
-    self.yagmail = yagmail.SMTP("addtowunasmovies@gmail.com","")
+    self.yagmail = yagmail.SMTP(self.email_address, keyring.get_password("EasyMovie", self.email_address))
 
 
 def get_unread(self):
