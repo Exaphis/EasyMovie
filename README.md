@@ -10,9 +10,9 @@ Run EasyMovie.py, and go through the initial setup. The settings will be saved t
 
 ## Dependencies
 
-*bs4 (BeautifulSoup)
-*keyring
-*yagmail
+* bs4 (BeautifulSoup)
+* keyring
+* yagmail
 
 ##To Do
 
