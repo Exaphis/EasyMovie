@@ -21,11 +21,11 @@ def initial_setup():
     pickle.dump(downloaded_movies_location, settings)
 
     users = []
-    for x in range(0, int(input("How many email addresses should be checked in the inbox: "))):
+    for x in range(0, int(input("How many email addresses shouFixed ld be checked in the inbox: "))):
         users.append(input("Enter an email address:"))
     pickle.dump(users, settings)
 
-    sleep_time = float(input("Sleep time after every run: "))
+    sleep_time = input("Sleep time after every run: ")
     pickle.dump(sleep_time, settings)
 
     email_address = input("Enter gmail address to check for emails: ")
@@ -35,5 +35,7 @@ def initial_setup():
     return downloaded_movies_location, users, sleep_time, email_address
 
 def change_settings():
+    downloaded_movies_location, users, sleep_time, email_address = load_settings()
     os.remove("settings.data")
+    keyring.delete_password("EasyMovie", email_address)
     initial_setup()

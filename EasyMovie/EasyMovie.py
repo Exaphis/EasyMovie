@@ -6,7 +6,11 @@ import settings
 from gmail import Gmail
 
 if os.path.isfile("settings.data"):
-    downloaded_movies_location, users, sleep_time, email_address = settings.load_settings()
+    try:
+        downloaded_movies_location, users, sleep_time, email_address = settings.load_settings()
+    except EOFError:
+        os.remove("settings.data")
+        settings.initial_setup()
 else:
     downloaded_movies_location, users, sleep_time, email_address = settings.initial_setup()
 
@@ -47,4 +51,4 @@ while True:
         print("Sent success email\n" + " "*(print_length-(len("Sent success email"))))
     old_downloaded = os.listdir(downloaded_movies_location)
 
-    time.sleep(sleep_time)
+    time.sleep(float(sleep_time))
