@@ -1,4 +1,5 @@
 import getpass
+import os
 import pickle
 
 import keyring
@@ -32,3 +33,7 @@ def initial_setup():
     keyring.set_password("EasyMovie", email_address, getpass.getpass())
 
     return downloaded_movies_location, users, sleep_time, email_address
+
+def change_settings():
+    os.remove("settings.data")
+    initial_setup()
