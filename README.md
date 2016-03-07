@@ -8,13 +8,11 @@ Download the EasyMovie folder.
 
 Run EasyMovie.py, and go through the initial setup. The settings will be saved throughout runs. Send an email from a specified user to your specified gmail account with the requested movie name in the subject line, and an email will be sent back to all of the users with the downloaded movie name and the transmission-remote output.
 
-## Contributing
+## Dependencies
 
-1. Fork it!
-2. Create your feature branch: `git checkout -b my-new-feature`
-3. Commit your changes: `git commit -am 'Add some feature'`
-4. Push to the branch: `git push origin my-new-feature`
-5. Submit a pull request
+bs4 (BeautifulSoup)
+keyring
+yagmail
 
 ##To Do
 
