@@ -14,7 +14,7 @@ def scan_for_subtitle(folder):
     for file in files:
         filepath = folder + "/" + file
         if os.path.isdir(filepath):
-            if scan_for_subtitle(filepath) == True:
+            if scan_for_subtitle(filepath) is True:
                 return True
 
     return False
@@ -25,9 +25,9 @@ def save_subtitles(movie, subtitles):
 
 
 def fetch_subtitles(folder):
-    if (scan_for_subtitle(folder) == True):
+    if scan_for_subtitle(folder) is True:
         return -1
     else:
         movies = subliminal.scan_videos(folder)
 
-    return {'subtitles' : subliminal.download_best_subtitles(movies, {Language('eng')}), 'movies': movies}
+    return {'subtitles': subliminal.download_best_subtitles(movies, {Language('eng')}), 'movies': movies}
