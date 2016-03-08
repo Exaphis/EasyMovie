@@ -1,6 +1,7 @@
 import os
 import time
 
+import fetch_subtitles
 import find_torrent
 import settings
 from gmail import Gmail
@@ -44,11 +45,21 @@ while True:
 
     new_downloaded = os.listdir(downloaded_movies_location)
     successful_torrents = list(set(new_downloaded) - set(old_downloaded))
+
     for torrent in successful_torrents:
         print(" "*print_length)
         print(torrent + " has been downloaded" + " "*(print_length-len(torrent + " has been downloaded")))
         gmail.send_email(receivers=users, subject="Success! Your movie has been downloaded.", message="Downloaded movie name: " + torrent)
         print("Sent success email\n" + " "*(print_length-(len("Sent success email"))))
+
+        subtitles = fetch_subtitles.fetch_subtitles(downloaded_movies_location + "/" + torrent)
+        if subtitles == -1:
+            gmail.send_email(receivers=users, subject="Subtitle Downloading Failed", message="Subtitles already exist." + torrent)
+        else:
+            for movie in subtitles['movies']:
+                fetch_subtitles.save_subtitles(movie, subtitles[movie])
+                gmail.send_email(receivers=users, subject="Subtitle Downloading Succeeded", message="Movie: " + movie + torrent)
+
     old_downloaded = os.listdir(downloaded_movies_location)
 
     time.sleep(float(sleep_time))
