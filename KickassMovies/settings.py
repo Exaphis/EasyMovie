@@ -6,7 +6,7 @@ import keyring
 
 
 def load_settings():
-    settings = open("settings.data", "rb")
+    settings = open("KickassMoviesSettings.data", "rb")
     downloaded_movies_location = pickle.load(settings)
     users = pickle.load(settings)
     sleep_time = pickle.load(settings)
@@ -15,13 +15,13 @@ def load_settings():
 
 
 def initial_setup():
-    settings = open("settings.data", "wb")
+    settings = open("KickassMoviesSettings.data", "wb")
 
     downloaded_movies_location = input("Filepath to completed movie download location: ")
     pickle.dump(downloaded_movies_location, settings)
 
     users = []
-    for x in range(0, int(input("How many email addresses shouFixed ld be checked in the inbox: "))):
+    for x in range(0, int(input("How many email addresses should be checked in the inbox: "))):
         users.append(input("Enter an email address:"))
     pickle.dump(users, settings)
 
@@ -30,12 +30,12 @@ def initial_setup():
 
     email_address = input("Enter gmail address to check for emails: ")
     pickle.dump(email_address, settings)
-    keyring.set_password("EasyMovie", email_address, getpass.getpass())
+    keyring.set_password("KickassMovies", email_address, getpass.getpass())
 
     return downloaded_movies_location, users, sleep_time, email_address
 
 def change_settings():
     downloaded_movies_location, users, sleep_time, email_address = load_settings()
-    os.remove("settings.data")
-    keyring.delete_password("EasyMovie", email_address)
+    os.remove("KickassMoviesSettings.data")
+    keyring.delete_password("KickassMovies", email_address)
     initial_setup()

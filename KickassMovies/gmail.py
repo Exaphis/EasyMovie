@@ -12,10 +12,10 @@ class Gmail:
         self.imap = imaplib.IMAP4_SSL("imap.gmail.com")
 
     def login_imap(self):
-        self.imap.login(self.email_address, keyring.get_password("EasyMovie", self.email_address))
+        self.imap.login(self.email_address, keyring.get_password("KickassMovies", self.email_address))
 
     def login_yagmail(self):
-        self.yagmail = yagmail.SMTP(self.email_address, keyring.get_password("EasyMovie", self.email_address))
+        self.yagmail = yagmail.SMTP(self.email_address, keyring.get_password("KickassMovies", self.email_address))
 
     def get_unread(self):
         try:
