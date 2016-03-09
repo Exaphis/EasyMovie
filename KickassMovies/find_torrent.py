@@ -1,5 +1,5 @@
 import subprocess
-import urllib
+import urllib.request, urllib.error
 import zlib
 
 from bs4 import BeautifulSoup

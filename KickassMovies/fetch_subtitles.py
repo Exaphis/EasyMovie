@@ -1,33 +1,82 @@
 import os
-import subliminal
-from babelfish import Language
+import hashlib
+import urllib.parse, urllib.request, urllib.error
 
-subliminal.region.configure('dogpile.cache.dbm', arguments={'filename': 'cachefile.dbm'})
+VIDEO_EXTENSIONS = ('.3g2', '.3gp', '.3gp2', '.3gpp', '.60d', '.ajp', '.asf', '.asx', '.avchd', '.avi', '.bik',
+                    '.bix', '.box', '.cam', '.dat', '.divx', '.dmf', '.dv', '.dvr-ms', '.evo', '.flc', '.fli',
+                    '.flic', '.flv', '.flx', '.gvi', '.gvp', '.h264', '.m1v', '.m2p', '.m2ts', '.m2v', '.m4e',
+                    '.m4v', '.mjp', '.mjpeg', '.mjpg', '.mkv', '.moov', '.mov', '.movhd', '.movie', '.movx', '.mp4',
+                    '.mpe', '.mpeg', '.mpg', '.mpv', '.mpv2', '.mxf', '.nsv', '.nut', '.ogg', '.ogm', '.omf', '.ps',
+                    '.qt', '.ram', '.rm', '.rmvb', '.swf', '.ts', '.vfw', '.vid', '.video', '.viv', '.vivo', '.vob',
+                    '.vro', '.wm', '.wmv', '.wmx', '.wrap', '.wvx', '.wx', '.x264', '.xvid')
 
 
-def scan_for_subtitle(folder):
+def scan_for_movies(folder):
     files = os.listdir(folder)
+    videos = []
     for file in files:
         if '.srt' in os.path.splitext(file):
-            return True
+            return False
 
     for file in files:
         filepath = folder + "/" + file
         if os.path.isdir(filepath):
-            if scan_for_subtitle(filepath) is True:
-                return True
+            movies = scan_for_movies(filepath)
+            if movies is False:
+                return False
+            else:
+                for movie in movies:
+                    videos.append(movie)
 
-    return False
+        if os.path.splitext(file)[1] in VIDEO_EXTENSIONS:
+            videos.append(filepath)
+
+    return videos
+
+def get_hash(file):
+    readsize = 64 * 1024
+    with open(file, 'rb') as f:
+        data = f.read(readsize)
+        f.seek(-readsize, os.SEEK_END)
+        data += f.read(readsize)
+    return hashlib.md5(data).hexdigest()
 
 
-def save_subtitles(movie, subtitles):
-    subliminal.save_subtitles(movie, subtitles)
+def download_subtitles(filepath):
+    user_agent = 'SubDB/1.0 (Exaphis; https://github.com/Exaphis/KickassMovies)'
+    language = 'en'
+    action = 'download'
+    base_url = 'http://api.thesubdb.com/?'
+    md5 = get_hash(filepath)
 
+    content = {
+        'action': action,
+        'hash': md5,
+        'language': language,
+    }
 
-def fetch_subtitles(folder):
-    if scan_for_subtitle(folder) is True:
-        return -1
-    else:
-        movies = subliminal.scan_videos(folder)
+    url = base_url + urllib.parse.urlencode(content)
+    req = urllib.request.Request(url)
+    req.add_header('User-Agent', user_agent)
+    try:
+        res = urllib.request.urlopen(req)
+    except urllib.error.HTTPError:
+        return False
 
-    return {'subtitles': subliminal.download_best_subtitles(movies, {Language('eng')}), 'movies': movies}
+    subtitles = res.read()
+    subtitle_name = os.path.splitext(os.path.split(filepath)[1])[0] + ".srt"
+
+    with open(os.path.split(filepath)[0] + subtitle_name, 'wb') as f:
+        f.write(subtitles)
+
+    return True
+
+def search_and_download(folder_path):
+    videos = scan_for_movies(folder_path)
+
+    output = []
+    if videos is False:
+        return False
+    for video in videos:
+        output.append([video, download_subtitles(video)])
+
