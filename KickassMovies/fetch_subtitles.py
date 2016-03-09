@@ -74,6 +74,9 @@ def download_subtitles(filepath):
 
 
 def search_and_download(folder_path):
+    if os.path.isfile(folder_path):
+        return [folder_path, download_subtitles(folder_path)]
+
     videos = scan_for_movies(folder_path)
 
     output = []
