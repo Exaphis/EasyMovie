@@ -33,6 +33,7 @@ def scan_for_movies(folder):
 
     return videos
 
+
 def get_hash(file):
     readsize = 64 * 1024
     with open(file, 'rb') as f:
@@ -71,6 +72,7 @@ def download_subtitles(filepath):
 
     return True
 
+
 def search_and_download(folder_path):
     videos = scan_for_movies(folder_path)
 
@@ -80,3 +82,4 @@ def search_and_download(folder_path):
     for video in videos:
         output.append([video, download_subtitles(video)])
 
+    return output
