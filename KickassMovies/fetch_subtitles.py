@@ -1,6 +1,8 @@
 import os
 import hashlib
-import urllib.parse, urllib.request, urllib.error
+import urllib.parse
+import urllib.request
+import urllib.error
 
 VIDEO_EXTENSIONS = ('.3g2', '.3gp', '.3gp2', '.3gpp', '.60d', '.ajp', '.asf', '.asx', '.avchd', '.avi', '.bik',
                     '.bix', '.box', '.cam', '.dat', '.divx', '.dmf', '.dv', '.dvr-ms', '.evo', '.flc', '.fli',
@@ -16,14 +18,14 @@ def scan_for_movies(folder):
     videos = []
     for file in files:
         if '.srt' in os.path.splitext(file):
-            return False
+            return [False]
 
     for file in files:
         filepath = folder + "/" + file
         if os.path.isdir(filepath):
             movies = scan_for_movies(filepath)
-            if movies is False:
-                return False
+            if False in movies:
+                return [False]
             else:
                 for movie in movies:
                     videos.append(movie)
@@ -62,7 +64,7 @@ def download_subtitles(filepath):
     try:
         res = urllib.request.urlopen(req)
     except urllib.error.HTTPError:
-        return False
+        return "Subtitle downloading failed"
 
     subtitles = res.read()
     subtitle_name = os.path.splitext(os.path.split(filepath)[1])[0] + ".srt"
@@ -70,19 +72,19 @@ def download_subtitles(filepath):
     with open(os.path.split(filepath)[0] + subtitle_name, 'wb') as f:
         f.write(subtitles)
 
-    return True
+    return "Subtitle downloading succeeded"
 
 
 def search_and_download(folder_path):
     if os.path.isfile(folder_path):
-        return [folder_path, download_subtitles(folder_path)]
+        return [download_subtitles(folder_path)]
 
     videos = scan_for_movies(folder_path)
 
     output = []
-    if videos is False:
-        return False
+    if False in videos:
+        return ["Subtitles exist"]
     for video in videos:
-        output.append([video, download_subtitles(video)])
+        output.append(download_subtitles(video))
 
     return output

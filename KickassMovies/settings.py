@@ -34,8 +34,8 @@ def initial_setup():
 
     return downloaded_movies_location, users, sleep_time, email_address
 
+
 def change_settings():
-    downloaded_movies_location, users, sleep_time, email_address = load_settings()
     os.remove("KickassMoviesSettings.data")
-    keyring.delete_password("KickassMovies", email_address)
+
     initial_setup()

@@ -53,14 +53,10 @@ while True:
         print("Sent success email\n" + " "*(print_length-(len("Sent success email"))))
 
         subtitle_results = fetch_subtitles.search_and_download(downloaded_movies_location + "/" + torrent)
-        if subtitle_results is False:
-            gmail.send_email(receivers=users, subject="Subtitle Downloading Failed", message="Subtitles already exist. Movie: " + torrent)
-
-        for movie in subtitle_results:
-            if movie[1] == False:
-                gmail.send_email(receivers=users, subject="Subtitle Downloading Failed", message="No subtitles found. Movie: " + movie[0])
-            else:
-                gmail.send_email(receivers=users, subject="Subtitle Downloading Succeeded", message="Movie: " + movie[0])
+        if "Subtitle downloading succeeded" in subtitle_results:
+            gmail.send_email(receivers=users, subject="Subtitles downloaded.", message="Movie: " + torrent)
+        else:
+            gmail.send_email(receivers=users, subject=subtitle_results[0], message="Movie: " + torrent)
 
     old_downloaded = os.listdir(downloaded_movies_location)
 
