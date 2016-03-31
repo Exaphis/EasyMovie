@@ -1,5 +1,6 @@
 import os
 import time
+import datetime
 
 import fetch_subtitles
 import find_torrent
@@ -22,10 +23,10 @@ print_length = 50
 old_downloaded = os.listdir(downloaded_movies_location)
 
 gmail = Gmail(email_address)
-gmail.login_imap()
 gmail.login_yagmail()
 
 while True:
+    current_time = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')
     print("Checking for emails" + " "*(print_length-(len("Checking for emails"))), end="\r")
 
     for received_email in gmail.get_unread():
