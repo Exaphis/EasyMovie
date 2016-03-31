@@ -35,6 +35,8 @@ def initial_setup():
 
     plex = input("Are you using Plex and Filebot to store and rename movies? (y/n)")
 
+    keyring.set_password("KickassMovies", email_address, getpass.getpass())
+
     if plex.lower() == "y":
         pickle.dump(True, settings)
         filebot_location = input("Filepath to the Plex movie location? "
@@ -43,11 +45,10 @@ def initial_setup():
 
     else:
         pickle.dump(False, settings)
+        filebot_location = "/"
         pickle.dump("/", settings)
 
-    keyring.set_password("KickassMovies", email_address, getpass.getpass())
-
-    return downloaded_movies_location, users, sleep_time, email_address
+    return downloaded_movies_location, users, sleep_time, email_address, plex, filebot_location
 
 
 def change_settings():
