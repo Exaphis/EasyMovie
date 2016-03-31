@@ -11,7 +11,9 @@ def load_settings():
     users = pickle.load(settings)
     sleep_time = pickle.load(settings)
     email_address = pickle.load(settings)
-    return downloaded_movies_location, users, sleep_time, email_address
+    plex = pickle.load(settings)
+    filebot_location = pickle.load(settings)
+    return downloaded_movies_location, users, sleep_time, email_address, plex, filebot_location
 
 
 def initial_setup():
@@ -30,6 +32,19 @@ def initial_setup():
 
     email_address = input("Enter gmail address to check for emails: ")
     pickle.dump(email_address, settings)
+
+    plex = input("Are you using Plex and Filebot to store and rename movies? (y/n)")
+
+    if plex.lower() == "y":
+        pickle.dump(True, settings)
+        filebot_location = input("Filepath to the Plex movie location? "
+                                 "(Different from completed movie download location)")
+        pickle.dump(filebot_location, settings)
+
+    else:
+        pickle.dump(False, settings)
+        pickle.dump("/", settings)
+
     keyring.set_password("KickassMovies", email_address, getpass.getpass())
 
     return downloaded_movies_location, users, sleep_time, email_address
@@ -38,4 +53,4 @@ def initial_setup():
 def change_settings():
     os.remove("KickassMoviesSettings.data")
 
-    initial_setup()
+    return initial_setup()

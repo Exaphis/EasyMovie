@@ -3,6 +3,7 @@ import hashlib
 import urllib.parse
 import urllib.request
 import urllib.error
+import subprocess
 
 VIDEO_EXTENSIONS = ('.3g2', '.3gp', '.3gp2', '.3gpp', '.60d', '.ajp', '.asf', '.asx', '.avchd', '.avi', '.bik',
                     '.bix', '.box', '.cam', '.dat', '.divx', '.dmf', '.dv', '.dvr-ms', '.evo', '.flc', '.fli',
@@ -75,16 +76,26 @@ def download_subtitles(filepath):
     return "Subtitle downloading succeeded"
 
 
-def search_and_download(folder_path):
-    if os.path.isfile(folder_path):
-        return [download_subtitles(folder_path)]
+def cleanup(folder_path):
+    movies = [file for file in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, file)) and
+              os.path.splitext(file)[1] in VIDEO_EXTENSIONS]
 
-    videos = scan_for_movies(folder_path)
+    for movie in movies:
+        os.makedirs(folder_path + "/" + os.path.splitext(movie)[0])
+        os.rename(folder_path + "/" + movie, folder_path + "/" + os.path.splitext(movie)[0] + "/" + movie)
 
-    output = []
-    if False in videos:
-        return ["Subtitles exist"]
-    for video in videos:
-        output.append(download_subtitles(video))
+def parse(folder_path, plex, filebot_path):
+    if plex:
+        subprocess.call(['filebot', '-script', 'fn:amc', '--output', filebot_path, '--log-file', 'amc.log', '--action',
+                         'copy', '-non-strict', '-extract', '-r', folder_path, '--def', 'excludeList=amc.txt',
+                         '-get-missing-subtitles'])
 
-    return output
+    else:
+        videos = scan_for_movies(folder_path)
+
+        output = {}
+        if False in videos:
+            return {os.path.basename(folder_path): "Subtitles exist"}
+        for video in videos:
+            output[video] = (download_subtitles(video))
+

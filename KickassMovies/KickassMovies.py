@@ -2,24 +2,28 @@ import os
 import time
 import datetime
 
-import fetch_subtitles
+import parse_movies
 import find_torrent
 import settings
 from gmail import Gmail
 
 if os.path.isfile("KickassMoviesSettings.data"):
     try:
-        downloaded_movies_location, users, sleep_time, email_address = settings.load_settings()
+        downloaded_movies_location, users, sleep_time, email_address, plex, filebot_location = settings.load_settings()
     except EOFError:
         os.remove("KickassMoviesSettings.data")
-        downloaded_movies_location, users, sleep_time, email_address = settings.initial_setup()
+        downloaded_movies_location, users, sleep_time, email_address, plex, filebot_location = settings.initial_setup()
 else:
-    downloaded_movies_location, users, sleep_time, email_address = settings.initial_setup()
+    downloaded_movies_location, users, sleep_time, email_address, plex, filebot_location = settings.initial_setup()
 
 if input("Would you like to change the settings? (y/n): ").lower() == "y":
-    settings.change_settings()
+    downloaded_movies_location, users, sleep_time, email_address, plex, filebot_location = settings.change_settings()
+
+if plex:
+    downloaded_movies_location = filebot_location
 
 print_length = 50
+new_movies_location = downloaded_movies_location
 old_downloaded = os.listdir(downloaded_movies_location)
 
 gmail = Gmail(email_address)
@@ -41,23 +45,26 @@ while True:
             print(sender + " "*(print_length-(len(sender))))
             print(subject + " "*(print_length-(len(subject))))
 
-            gmail.send_email(receivers=users, subject="Movie Received. Downloading.", message="Added movie name: " + added_torrent[0] + "\nServer output: " + str(added_torrent[1]))
+            gmail.send_email(receivers=users, subject="Movie Received. Downloading.",
+                             message="Added movie name: " + added_torrent[0] +
+                                     "\nServer output: " + str(added_torrent[1]))
+
             print("Sent response email\n" + " "*(print_length-(len("Sent response email"))))
+
+    parse_movies.cleanup(downloaded_movies_location)
 
     new_downloaded = os.listdir(downloaded_movies_location)
     successful_torrents = list(set(new_downloaded) - set(old_downloaded))
 
     for torrent in successful_torrents:
-        print(" "*print_length)
-        print(torrent + " has been downloaded" + " "*(print_length-len(torrent + " has been downloaded")))
-        gmail.send_email(receivers=users, subject="Success! Your movie has been downloaded.", message="Downloaded movie name: " + torrent)
-        print("Sent success email\n" + " "*(print_length-(len("Sent success email"))))
+        parse_movies.parse(new_movies_location + "/" + torrent, plex, filebot_location)
 
-        subtitle_results = fetch_subtitles.search_and_download(downloaded_movies_location + "/" + torrent)
-        if "Subtitle downloading succeeded" in subtitle_results:
-            gmail.send_email(receivers=users, subject="Subtitles downloaded.", message="Movie: " + torrent)
-        else:
-            gmail.send_email(receivers=users, subject=subtitle_results[0], message="Movie: " + torrent)
+        print(" " * print_length)
+        print(torrent + " has been downloaded")
+        print(" " * print_length)
+
+        gmail.send_email(receivers=users, subject="Movie successfully downloaded",
+                         message="Downloaded movie: " + torrent)
 
     old_downloaded = os.listdir(downloaded_movies_location)
 
