@@ -17,6 +17,6 @@ Run KickassMovies.py, and go through the initial setup. The settings will be sav
 
 ##To Do
 
-* ~~Add automatic subtitle downloading~~ (Still needs testing)
+* ~~Add automatic subtitle downloading~~
 * ~~Be able to change settings~~
 * Add GUI
