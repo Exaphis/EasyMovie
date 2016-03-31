@@ -4,6 +4,8 @@ import urllib.parse
 import urllib.request
 import urllib.error
 import subprocess
+import shutil
+from threading import Timer
 
 VIDEO_EXTENSIONS = ('.3g2', '.3gp', '.3gp2', '.3gpp', '.60d', '.ajp', '.asf', '.asx', '.avchd', '.avi', '.bik',
                     '.bix', '.box', '.cam', '.dat', '.divx', '.dmf', '.dv', '.dvr-ms', '.evo', '.flc', '.fli',
@@ -84,11 +86,19 @@ def cleanup(folder_path):
         os.makedirs(folder_path + "/" + os.path.splitext(movie)[0])
         os.rename(folder_path + "/" + movie, folder_path + "/" + os.path.splitext(movie)[0] + "/" + movie)
 
+
+def delete_folder(folder):
+    shutil.rmtree(folder)
+
+
 def parse(folder_path, plex, filebot_path):
     if plex:
+        subprocess.call(['filebot', '-get-missing-subtitles', folder_path])
         subprocess.call(['filebot', '-script', 'fn:amc', '--output', filebot_path, '--log-file', 'amc.log', '--action',
-                         'copy', '-non-strict', '-extract', '-r', folder_path, '--def', 'excludeList=amc.txt',
-                         '-get-missing-subtitles'])
+                         'copy', '-non-strict', '-extract', '-r', folder_path, '--def', 'excludeList=amc.txt'])
+
+        t = Timer(259200.0, delete_folder)
+        t.start()
 
     else:
         videos = scan_for_movies(folder_path)
@@ -98,4 +108,3 @@ def parse(folder_path, plex, filebot_path):
             return {os.path.basename(folder_path): "Subtitles exist"}
         for video in videos:
             output[video] = (download_subtitles(video))
-
