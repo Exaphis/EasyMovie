@@ -13,7 +13,6 @@ Run KickassMovies.py, and go through the initial setup. The settings will be sav
 * bs4 (BeautifulSoup)
 * keyring
 * yagmail
-* subliminal
 
 ##To Do
 
