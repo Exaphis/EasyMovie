@@ -19,6 +19,7 @@ class Gmail:
         self.yagmail = yagmail.SMTP(self.email_address, keyring.get_password("KickassMovies", self.email_address))
 
     def get_unread(self):
+        self.imap = imaplib.IMAP4_SSL("imap.gmail.com")
         self.login_imap()
         retcode, messages = "", ""
         try:
