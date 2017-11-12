@@ -14,7 +14,7 @@ Run KickassMovies.py, and go through the initial setup. The settings will be sav
 * keyring
 * yagmail
 
-##To Do
+## To Do
 
 * ~~Add automatic subtitle downloading~~
 * ~~Be able to change settings~~
