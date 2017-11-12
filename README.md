@@ -1,4 +1,7 @@
-A small Python 3 script I made to download movies from KickassTorrents easily. Checking an email address, it will use the subject line of unread emails to search KAT and download it with transmission-remote. I'm currently using it on an old MacBook converted into a Linux server.
+## Definitely does not work anymore after KAT was shut down.
+Radarr is a much better alternative.
+
+A small Python 3 script made to download movies from KickassTorrents easily. Checking an email address, it will use the subject line of unread emails to search KAT and download it with transmission-remote. 
 
 ## Installation
 
